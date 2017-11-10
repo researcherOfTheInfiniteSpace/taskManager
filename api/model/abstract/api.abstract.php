@@ -11,12 +11,6 @@ abstract class API {
      */
     protected $endpoint = '';
     /**
-     * Property: verb
-     * An optional additional descriptor about the endpoint, used for things that can
-     * not be handled by the basic methods. eg: /files/process
-     */
-    protected $verb = '';
-    /**
      * Property: args
      * Any additional URI components after the endpoint and verb have been removed, in our
      * case, an integer ID for the resource. eg: /<endpoint>/<verb>/<arg0>/<arg1>
@@ -29,34 +23,34 @@ abstract class API {
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
 
-        $this->args = explode('/', rtrim($request, '/'));
-        $this->endpoint = array_shift($this->args);
-        if (array_key_exists(0, $this->args) && !is_numeric($this->args[0])) {
-            $this->verb = array_shift($this->args);
-        }
-
         $this->method = $_SERVER['REQUEST_METHOD'];
-        if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER)) {
-            if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE') {
-                $this->method = 'DELETE';
-            } else if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'PUT') {
-                $this->method = 'PUT';
-            } else {
-                throw new Exception("Unexpected Header");
+        $this->args = explode('/', rtrim($request, '/'));
+        if(!empty($this->args)) {
+            $this->endpoint = array_shift($this->args);
+            if(!empty($this->args)) {
+                $this->args = array_shift($this->args);
             }
         }
     }
 
     public function processAPI() {
-        $classCalled = ucfirst($this->endpoint);
-        if(class_exists($classCalled)) {
-            $this->{$this->endpoint} = new $classCalled();
-            print_r($this);
-            return $this->_response($this->{$this->endpoint}($this->args));
+        if($this->args != null) {
+            $classCalled = ucfirst($this->endpoint);
+            $call = new $classCalled($this->method, $this->args);
+            if($call) {
+                if(is_numeric($this->args)) {
+                    return $this->_response($call);
+                } else {
+                    return $this->_response($call->all);
+                }
+            } else {
+                return $this->_response("Data deleted", 200);
+            }
+        } else {
+            return $this->_response("This endpoint needs argument", 404);
         }
-        return $this->_response("No Endpoint: $this->endpoint", 404);
     }
-
+    
     private function _response($data, $status = 200) {
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
         return json_encode($data);
