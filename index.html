@@ -3,9 +3,26 @@
     <head>
         <meta charset="utf-8">
         <title>Task Manager</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="layout/css/font-awesome.min.css">
+        <link rel="stylesheet" href="layout/css/style.css">
+        <script src="app.js" type="module"></script>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Task Manager</h1>
+        <section id="container">
+            <user class="hidden">
+                <button class="deleteUser"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                <tasks>
+                    <ul>
+                        <task class="taskModel hidden">
+                            <button class="deleteTask"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                            <description class="hidden"></description>
+                        </task>
+                    </ul>
+                </tasks>
+                <button class="addTask">Ajouter une tâche</button>
+            </user>
+            <button id="addUser">Ajouter un utilisateur</button>
+        </section>
     </body>
 </html>

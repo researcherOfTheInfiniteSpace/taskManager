@@ -10,9 +10,11 @@ class Transaction {
     public function dbSelect($query) {
         try {
             $sql = $this->_dbh->query($query, PDO::FETCH_ASSOC);
+            $this->select = array();
             foreach ($sql as $key => $value) {
-                $this->_dbh->select[$key] = $value;
+                $this->select[$key] = $value;
             }
+            $this->_dbh = null;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }

@@ -33,8 +33,8 @@ class Task {
                 case 'GET':
                     $get = new Transaction;
                     $get->dbSelect('SELECT * FROM ' . get_called_class() . ' WHERE id = ' . $args);
-                    if(property_exists($get->_dbh, 'select') && is_array($get->_dbh->select)) {
-                        $this->_get(array_shift($get->_dbh->select));
+                    if(property_exists($get, 'select') && is_array($get->select) && !empty($get->select)) {
+                        $this->_get(array_shift($get->select));
                     } else {
                         throw new Exception('No user found for this request');
                     }
@@ -48,11 +48,11 @@ class Task {
             }
         } else {
             if($method == 'GET') {
-                $get = new Transaction;
-                $get->dbSelect('SELECT * FROM ' . get_called_class());
-                if(is_array($get->_dbh->select)) {
+                $getAll = new Transaction;
+                $getAll->dbSelect('SELECT * FROM ' . get_called_class());
+                if($getAll->select && is_array($getAll->select) && !empty($getAll->select)) {
                     $this->all = array();
-                    foreach($get->_dbh->select as $key => $value) {
+                    foreach($getAll->select as $key => $value) {
                         $this->all[] = $value;
                     }
                 } else {
