@@ -19,17 +19,27 @@ abstract class API {
     protected $args = Array();
 
     public function __construct($request) {
+
         header("Access-Control-Allow-Orgin: *");
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
 
         $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->args = explode('/', rtrim($request, '/'));
-        if(!empty($this->args)) {
-            $this->endpoint = array_shift($this->args);
+        if($this->method == 'GET') {
+            $this->args = explode('/', rtrim($request['request'], '/'));
             if(!empty($this->args)) {
-                $this->args = array_shift($this->args);
+                $this->endpoint = array_shift($this->args);
+                if(!empty($this->args)) {
+                    if($this->args[0] == 'all') {
+                        $this->args = array_shift($this->args);
+                    }
+
+                }
             }
+        } else if($this->method == 'POST' || $this->method == 'DELETE') {
+            $this->endpoint = $request['request'];
+            unset($request['request']);
+            $this->args = $request;
         }
     }
 
@@ -38,7 +48,7 @@ abstract class API {
             $classCalled = ucfirst($this->endpoint);
             $call = new $classCalled($this->method, $this->args);
             if($call) {
-                if(is_numeric($this->args)) {
+                if(is_numeric($this->args) || $this->args != 'all') {
                     return $this->_response($call);
                 } else {
                     return $this->_response($call->all);
@@ -50,7 +60,7 @@ abstract class API {
             return $this->_response("This endpoint needs argument", 404);
         }
     }
-    
+
     private function _response($data, $status = 200) {
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
         return json_encode($data);

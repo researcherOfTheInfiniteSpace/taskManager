@@ -1,3 +1,5 @@
+import {userController} from '/controller/user';
+
 const userView = {
     userDisplay: function(data) {
         data = JSON.parse(data);
@@ -8,8 +10,9 @@ const userView = {
             newUser.dataset.email = user.email;
             let userName = document.createElement('span');
             userName.classList.add('userName');
-            userName.appendChild(document.createTextNode(user.name));
+            userName.appendChild(document.createTextNode(user.title));
             newUser.insertBefore(userName, newUser.getElementsByClassName('deleteUser')[0]);
+            newUser.getElementsByClassName('deleteUser')[0].onclick = function(){userView.deleteUser(user.id)};
             newUser.classList.remove('hidden');
             if(user.tasks && typeof user.tasks == "object") {
                 user.tasks.forEach(task => {
@@ -29,6 +32,12 @@ const userView = {
             container.insertBefore(newUser, document.getElementById('addUser'));
         });
     },
+    deleteUser: function(userId) {
+        let result = window.confirm('Êtes vous sur de vouloir supprimer cet utilisateur ?');
+        if(result) {
+            userController.deleteUser(userId)
+        }
+    }
 }
 
 export {userView};

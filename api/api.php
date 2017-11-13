@@ -16,7 +16,7 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
 }
 
 try {
-    $API = new TaskManager($_REQUEST['request'], $_SERVER['HTTP_ORIGIN']);
+    $API = new TaskManager($_REQUEST, $_SERVER['HTTP_ORIGIN']);
     print $API->processAPI();
 } catch (Exception $e) {
     print json_encode(Array('error' => $e->getMessage()));
