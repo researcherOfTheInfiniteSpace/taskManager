@@ -30,10 +30,7 @@ abstract class API {
             if(!empty($this->args)) {
                 $this->endpoint = array_shift($this->args);
                 if(!empty($this->args)) {
-                    if($this->args[0] == 'all') {
-                        $this->args = array_shift($this->args);
-                    }
-
+                    $this->args = array_shift($this->args);
                 }
             }
         } else if($this->method == 'POST' || $this->method == 'DELETE') {

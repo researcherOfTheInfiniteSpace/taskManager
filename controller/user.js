@@ -18,7 +18,7 @@ const userController = {
     addUser: function(e) {
         e.preventDefault();
         let newUser = {
-            title: document.querySelectorAll('input[name="title"]')[0].value,
+            name: document.querySelectorAll('input[name="name"]')[0].value,
             email: document.querySelectorAll('input[name="email"]')[0].value
         };
         let params = Object.keys(newUser).map(

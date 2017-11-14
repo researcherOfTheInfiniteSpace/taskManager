@@ -7,4 +7,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //Action
     let addUser = document.getElementById('addUser').querySelectorAll('button[type="submit"]')[0];
     addUser.onclick = userController.addUser;
+
 });

@@ -72,14 +72,21 @@ tasks ul {
     padding:0;
 }
 
-description {
-    font-size: 1em;
-    text-transform: lowercase;
+task {
     display: block;
-    text-align: left;
+    background-color: #8bed8d;
+    margin: 6%;
 }
 
-.addTask {
+description {
+    text-transform: lowercase;
+    display: block;
+    text-align: center;
+    font-size: 0.8em;
+    margin: 3%;
+}
+
+.addTask button{
     display: block;
     margin: 5% auto;
     border: 0;

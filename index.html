@@ -16,14 +16,18 @@
                     <ul>
                         <task class="taskModel hidden">
                             <button class="deleteTask"><i class="fa fa-minus" aria-hidden="true"></i></button>
-                            <description class="hidden"></description>
+                            <description></description>
                         </task>
                     </ul>
                 </tasks>
-                <button class="addTask">Ajouter une tâche</button>
+                <form class="addTask">
+                    <input type="text" name="title" placeholder="Nom"/>
+                    <input type="text" name="description" placeholder="Description"/>
+                    <button type="submit">Ajouter une tâche</button>
+                </form>
             </user>
             <form id="addUser">
-                <input type="text" name="title" placeholder="Nom"/>
+                <input type="text" name="name" placeholder="Nom"/>
                 <input type="text" name="email" placeholder="E-mail"/>
                 <button type="submit">Ajouter un utilisateur</button>
             </form>

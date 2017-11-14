@@ -21,10 +21,24 @@ class Transaction {
 
     }
 
-    public function dbInsert($query) {
+    public function dbInsert($args, $table) {
         try {
+            $query = 'INSERT INTO ' . $table . ' (';
+            $query .= implode(',', array_keys($args));
+            $query .= ') ';
+            $query .= 'VALUES(';
+            $i = 0;
+            foreach($args as $key => $value) {
+                $i++;
+                if($i < count($args)) {
+                    $query .=  '\'' . $value . '\', ';
+                } else {
+                    $query .=  '\'' . $value . '\'';
+                }
+            }
+            $query .= ')';
             $sql = $this->_dbh->query($query);
-            $this->insert = true;
+            $this->insert = $this->_dbh->lastInsertId();
             $this->_dbh = null;
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -35,8 +49,20 @@ class Transaction {
 
     }
 
-    public function dbDelete($query) {
+    public function dbDelete($args, $table) {
         try {
+            $query = 'DELETE FROM ' . $table . ' WHERE ';
+            if(!empty($args)) {
+                $i = 1;
+                foreach($args as $key => $value) {
+                    $i++;
+                    if($i < count($args)) {
+                        $query .= $key . ' = \'' . $value . '\' AND ';
+                    } else {
+                        $query .= $key . ' = \'' . $value . '\' ';
+                    }
+                }
+            }
             $sql = $this->_dbh->query($query);
             $this->delete = true;
             $this->_dbh = null;

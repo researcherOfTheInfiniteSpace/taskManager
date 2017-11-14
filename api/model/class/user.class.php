@@ -14,21 +14,7 @@ class User {
                     break;
                 case 'POST':
                     $insert = new Transaction;
-                    $query = 'INSERT INTO ' . strtolower(get_called_class()) . ' (';
-                    $query .= implode(',', array_keys($args));
-                    $query .= ') ';
-                    $query .= 'VALUES(';
-                    $i = 0;
-                    foreach($args as $key => $value) {
-                        $i++;
-                        if($i < count($args)) {
-                            $query .=  '\'' . $value . '\', ';
-                        } else {
-                            $query .=  '\'' . $value . '\'';
-                        }
-                    }
-                    $query .= ')';
-                    $insert->dbInsert($query);
+                    $insert->dbInsert($args, strtolower(get_called_class()));
                     if(!property_exists($insert, 'insert') && !$insert->insert) {
                         throw new Exception('The record couldn\'t be done.');
                     }
@@ -38,20 +24,8 @@ class User {
                     break;
                 case 'DELETE':
                     $delete = new Transaction;
-                    $query = 'DELETE FROM ' . strtolower(get_called_class()) . ' WHERE ';
-                    if(!empty($args)) {
-                        $i = 1;
-                        foreach($args as $key => $value) {
-                            $i++;
-                            if($i < count($args)) {
-                                $query .= $key . ' = \'' . $value . '\' AND ';
-                            } else {
-                                $query .= $key . ' = \'' . $value . '\' ';
-                            }
-                        }
-                    }
-                    $delete->dbDelete($query);
-                    if(!property_exists($delete, '$delete') && !$delete->insert) {
+                    $delete->dbDelete($args, strtolower(get_called_class()));
+                    if(!property_exists($delete, '$delete') && !$delete->delete) {
                         throw new Exception('The deletion couldn\'t be done.');
                     }
                     break;
